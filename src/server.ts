@@ -317,6 +317,20 @@ app.get("/countries", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+// GET /countries/image
+app.get(
+  "/countries/image",
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const imagePath = path.join(__dirname, "..", "cache", "summary.png");
+      await fs.access(imagePath);
+      res.sendFile(imagePath);
+    } catch (error) {
+      res.status(404).json({ error: "Summary image not found" });
+    }
+  }
+);
+
 // GET /countries/:name
 app.get(
   "/countries/:name",
@@ -383,19 +397,7 @@ app.get("/status", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-// GET /countries/image
-app.get(
-  "/countries/image",
-  async (req: Request, res: Response): Promise<void> => {
-    try {
-      const imagePath = path.join(__dirname, "..", "cache", "summary.png");
-      await fs.access(imagePath);
-      res.sendFile(imagePath);
-    } catch (error) {
-      res.status(404).json({ error: "Summary image not found" });
-    }
-  }
-);
+
 
 // Health check
 app.get("/", (req: Request, res: Response): void => {
