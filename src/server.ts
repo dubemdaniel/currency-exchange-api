@@ -44,6 +44,8 @@ const pool = mysql.createPool({
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'countries_db',
   waitForConnections: true,
+  connectTimeout: 60000,
+  //  acquireTimeout: 60000,
   connectionLimit: 10,
   queueLimit: 0
 });
@@ -88,7 +90,6 @@ async function initializeDatabase(): Promise<void> {
   }
 }
 
-// Generate summary image
 async function generateSummaryImage(
   totalCountries: number,
   topCountries: Array<{ name: string; estimated_gdp: number | null }>,
@@ -202,7 +203,8 @@ app.post(
         if (country.currencies && country.currencies.length > 0) {
           currencyCode = country.currencies[0]!.code;
 
-          const rate = exchangeRates[currencyCode]; // number | undefined
+            const rate = exchangeRates[currencyCode];
+            // number | undefined
           if (rate !== undefined) {
             exchangeRate = rate; // number
             const randomMultiplier = Math.random() * (2000 - 1000) + 1000;
